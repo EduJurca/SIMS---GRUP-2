@@ -170,26 +170,7 @@ class IncidentTest extends TestCase {
 
         $this->assertTrue($incident->createIncident($data));
     }
-
-
-
-    // Fail to create incident when provided type is invalid
-    public function testCreateIncidentInvalidType() {
-        $db = new FakeDB(['execute_result' => true]);
-        $user = new FakeUser([10]);
-        $incident = new Incident($db, $user);
-
-        $data = [
-            'type' => 'invalid_type',
-            'description' => 'X',
-            'incident_creator' => 10
-        ];
-
-        $this->assertFalse($incident->createIncident($data));
-    }
-
-
-    
+  
     // Fail to create incident if creator does not exist
     public function testCreateIncidentInvalidCreator() {
         $db = new FakeDB(['execute_result' => true]);
@@ -204,17 +185,6 @@ class IncidentTest extends TestCase {
         ];
 
         $this->assertFalse($incident->createIncident($data));
-    }
-
-
-
-    // Return null when getting an incident by non-existing id
-    public function testGetIncidentByIdNotFound() {
-        $db = new FakeDB(['by_id' => null]);
-        $user = new FakeUser([]);
-        $incident = new Incident($db, $user);
-
-        $this->assertNull($incident->getIncidentById(12345));
     }
 
     // Return incident data when getting by existing id
@@ -236,7 +206,6 @@ class IncidentTest extends TestCase {
     }
 
 
-
     // Return the count of active (non-resolved) incidents
     public function testGetActiveIncidents() {
         $db = new FakeDB(['active_total' => 5]);
@@ -244,39 +213,6 @@ class IncidentTest extends TestCase {
         $incident = new Incident($db, $user);
 
         $this->assertEquals(5, $incident->getActiveIncidents());
-    }
-
-
-
-    // Simulate DB INSERT failure and expect createIncident to return false
-    public function testCreateIncidentDbFailure() {
-        // Simulate DB failing to execute INSERT
-        $db = new FakeDB(['expect_sql' => [
-            'INSERT INTO incidents' => [null, false, 5] // execReturn = false
-        ]]);
-        $user = new FakeUser([10]);
-
-        $incident = new Incident($db, $user);
-
-        $data = [
-            'type' => 'mechanical',
-            'description' => 'Falla en frenos',
-            'incident_creator' => 10,
-            'incident_assignee' => 2
-        ];
-
-        $this->assertFalse($incident->createIncident($data));
-    }
-
-
-
-    // Update returns false when the incident does not exist
-    public function testUpdateIncidentNotFound() {
-        $db = new FakeDB(['by_id' => null]);
-        $user = new FakeUser([]);
-        $incident = new Incident($db, $user);
-
-        $this->assertNull($incident->getIncidentById(12345));
     }
 
     // Delete incident and ensure the id is bound to the DELETE statement

@@ -63,6 +63,7 @@ $hideChatToggle = true; // Ocultar el botón flotante cuando se usa desde footer
 include __DIR__ . '/../../commons/chatbot-widget.php';
 ?>
 
+<script src="/assets/js/toast.js"></script>
 <script src="/assets/js/main.js"></script>
 
 <?php if (isset($additionalJS)): ?>
